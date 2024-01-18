@@ -6,68 +6,71 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:19 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/17 17:58:58 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:05:59 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
+char	*free_all(char *buffer, char *remanent, char *line)
+{
+	if (buffer)
+		free(buffer);
+	if (remanent)
+		free(remanent);
+	if (line)
+		free(line);
+	return (NULL);
+}
+
+char	*get_line_remanent(char *remanent)
+{
+	static int	last_pos;
+	char		*line;
+	int			i;
+
+	if (!last_pos)
+		last_pos = 0;
+	i = 0;
+	while (remanent[last_pos + i] != '\n' && remanent[last_pos + i] != '\0')
+		i++;
+	line = (char *)malloc(sizeof(char) * i);
+	if (!line)
+	{
+		free (remanent);
+		return (NULL);
+	}
+	ft_strlcpy(line, &remanent[last_pos], i);
+	last_pos += i;
+	return (line);
+}
+
 char	*read_line(int fd, char *buffer)
 {
-	static char	*remanent;
-	int			i;
-	ssize_t		bytes_read;
-	char		*line;
+	static char		*remanent;
+	static ssize_t	bytes_read;
+	int				size;
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	if(bytes_read == -1)
-		return (NULL);
-	i = 0;
-	line = NULL;
 	if (remanent)
-		buffer -= ft_strlen(remanent);
-	while (i < bytes_read)
 	{
-		if (buffer[i] == '\n')
+		if (bytes_read > 0)
 		{
-			printf("<salto>");
-			if (remanent)
-			{
-				free(line);
-				line = (char *)malloc(sizeof(char) * (i + ft_strlen(remanent) - 1));
-			}
-			else
-				line = (char *)malloc(sizeof(char) * (i - 1));
-			if (!line)
-				return(NULL);
-			if (remanent)
-			{
-				ft_strlcpy(line, remanent, ft_strlen(remanent));
-				free(remanent);
-			}
-			ft_strlcat(line, buffer, i - 1);
-			remanent = (char *)malloc(sizeof(char) * (bytes_read - i));
-			if (!remanent)
-				return(NULL);
-			ft_strlcpy(remanent, &buffer[i], (bytes_read - i));
-			return(line);
+			size = ft_strlen(remanent);
+			free(remanent);
+			remanent = (char *)malloc(sizeof(char) * (bytes_read + size));
+			ft_strlcat(remanent, buffer, bytes_read);
 		}
-		else if (buffer[i] == '\0')
-		{
-			printf("<amaitu>");
-			if (remanent)
-				free(remanent);
-			if (line)
-				free(line);
-			line = (char *)malloc(sizeof(char) * i);
-			if (!line)
-				return(NULL);
-			ft_strlcat(line, buffer, i);
-		}
-		i++;
+		free(buffer);
+		return (get_line_remanent(remanent));
 	}
-	return (line);
+	if (bytes_read <= 0)
+		return (NULL);
+	remanent = (char *)malloc(sizeof(char) * bytes_read);
+	ft_strlcat(remanent, buffer, bytes_read);
+	free(buffer);
+	return (get_line_remanent(remanent));
 }
 
 char	*get_next_line(int fd)
@@ -94,4 +97,5 @@ int	main(void)
 		s = get_next_line(file);
 	}
 	free(s);
+	close(file);
 }
