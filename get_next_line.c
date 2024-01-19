@@ -6,7 +6,7 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:19 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/18 15:05:59 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/01/19 12:28:51 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*get_line_remanent(char *remanent)
 	}
 	ft_strlcpy(line, &remanent[last_pos], i);
 	last_pos += i;
+	if (last_pos >= ft_strlen(remanent))
+		return (NULL);
 	return (line);
 }
 
@@ -50,37 +52,43 @@ char	*read_line(int fd, char *buffer)
 {
 	static char		*remanent;
 	static ssize_t	bytes_read;
-	int				size;
+	char			*temp;
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read < 0)
+		return (NULL);
+	buffer[bytes_read] = '\0';
 	if (remanent)
 	{
+		printf("%s", remanent);
 		if (bytes_read > 0)
 		{
-			size = ft_strlen(remanent);
+			temp = (char *)malloc(sizeof(char) * ft_strlen(remanent) + 1);
+			ft_strlcpy(temp, remanent, ft_strlen(remanent) + 1);
 			free(remanent);
-			remanent = (char *)malloc(sizeof(char) * (bytes_read + size));
-			ft_strlcat(remanent, buffer, bytes_read);
+			remanent = (char *)malloc(sizeof(char) * (bytes_read + ft_strlen(temp) + 1));
+			ft_strlcpy(remanent, temp, ft_strlen(temp) + 1);
+			free(temp);
+			ft_strlcat(remanent, buffer, bytes_read + 1);
 		}
-		free(buffer);
 		return (get_line_remanent(remanent));
 	}
-	if (bytes_read <= 0)
-		return (NULL);
-	remanent = (char *)malloc(sizeof(char) * bytes_read);
-	ft_strlcat(remanent, buffer, bytes_read);
-	free(buffer);
+	remanent = (char *)malloc(sizeof(char) * bytes_read + 1);
+	ft_strlcat(remanent, buffer, bytes_read + 1);
 	return (get_line_remanent(remanent));
 }
 
 char	*get_next_line(int fd)
 {
 	char	*buffer;
+	char	*line;
 
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buffer)
 		return (NULL);
-	return (read_line(fd, buffer));
+	line = read_line(fd, buffer);
+	free(buffer);
+	return (line);
 }
 
 #include <fcntl.h>
