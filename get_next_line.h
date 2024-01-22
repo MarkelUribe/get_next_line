@@ -6,7 +6,7 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:51 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/19 09:28:02 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/01/22 19:08:28 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,5 @@
 #endif
 
 char	*get_next_line(int fd);
-size_t	ft_strlen(const char *s);
-size_t	ft_strlcat(char *dst,
-const char *src, size_t dstsize);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+size_t	ft_strlen(char *s);
+char	*ft_strjoin(char *line, char *buf);
