@@ -6,11 +6,24 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:54 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/19 16:38:05 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:12:24 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if ((char)c == '\0')
+		return ((char *)s);
+	return (NULL);
+}
 
 size_t	ft_strlen(char *s)
 {

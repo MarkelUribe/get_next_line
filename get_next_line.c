@@ -6,30 +6,25 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:19 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/22 20:06:18 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/01/29 16:30:15 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-char	*get_line(char *buffer)
+char	*get_line(char *str, char *buffer)
 {
 	char	*line;
 	int		i;
 
-	line = NULL;
 	i = 0;
-	while (buffer[i] != '\n' && buffer[i] != '\0')
+	while (str[i] && str[i] != '\n')
 		i++;
-	buffer = ft_strjoin(buffer, &buffer[i]);
-	if (i >= ft_strlen(buffer))
-		return (NULL);
-	line = ft_strjoin(line, buffer[i]);
-	if (!line)
-		return (NULL);
-	if (!line)
-		return (NULL);
+	line = (char *)malloc(sizeof(char) * i + 2);
+	ft_memcpy(line, str, i);
+	line[i] = '\0';
+	line[i++] = '\n';
+	ft_memcpy(buffer, &str[i], ft_strlen(&str[i]));
 	return (line);
 }
 
@@ -39,31 +34,28 @@ char	*get_next_line(int fd)
 	char		*line;
 	size_t		bytes_read;
 
-	//Leer el resto anterior de buffer
 	line = NULL;
 	bytes_read = 1;
-	if (buffer)
+	while(fd >= 0 || BUFFER_SIZE > 0)
 	{
-		line = get_line(buffer);
-		if (line)
-			return (line);
+		while (1)
+		{
+			bytes_read = read(fd, buffer, BUFFER_SIZE);
+			if ((int)bytes_read == -1)
+				return (free(line), NULL);
+			buffer[bytes_read] = '\0';
+			line = ft_strjoin(line, buffer);
+			if (ft_strchr(line, '\n'))
+				break;
+		}
+		return (get_line(line, buffer));
 	}
-	while(1)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-			return (free(line), NULL);
-		else if (bytes_read == 0)
-			return (line);
-		buffer[bytes_read] = '\0';
-		line = ft_strjoin(line, buffer);
-		if (!line)
-			return (NULL);
-	}
-	//Dejar el resto en buffer
-	return (line);
+	if (line[0] == '\0' && bytes_read == 0)
+		return (free(line), NULL);
+	return (NULL);
 }
 
+#include <stdio.h>
 #include <fcntl.h>
 int	main(void)
 {
@@ -73,7 +65,7 @@ int	main(void)
 	file = open("test.txt", O_RDONLY);
 	while((s = get_next_line(file)) != NULL)
 	{
-		printf("%s\n", s);
+		printf("%s\nSALTO", s);
 		free(s);
 	}
 	close(file);
