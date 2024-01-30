@@ -6,7 +6,7 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:19 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/30 10:25:02 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/01/30 10:28:22 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ char	*get_line(char *str, char *buffer, size_t bytes_read)
 		i++;
 	ft_memcpy(buffer, &str[i], ft_strlen(&str[i] + 1));
 	buffer[ft_strlen(&str[i])] = '\0';
+	free(str);
 	return (line);
 }
 
