@@ -6,13 +6,13 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:19 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/30 10:28:22 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/02/01 13:47:42 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_line(char *str, char *buffer, size_t bytes_read)
+static char	*get_line(char *str, char *buffer, size_t bytes_read)
 {
 	char	*line;
 	int		i;
@@ -42,7 +42,8 @@ char	*get_next_line(int fd)
 	char		*line;
 	size_t		bytes_read;
 
-	line = NULL;
+	line = (char *)malloc(sizeof(char));
+	line[0] = '\0';
 	bytes_read = 1;
 	if (ft_strlen(buffer) > 0)
 		line = ft_strjoin(line, buffer);
@@ -60,7 +61,7 @@ char	*get_next_line(int fd)
 		}
 		return (get_line(line, buffer, bytes_read));
 	}
-	return (NULL);
+	return (free(line), NULL);
 }
 /*
 #include <stdio.h>
