@@ -6,7 +6,7 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:19 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/02/01 13:47:42 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/02/02 13:05:52 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	*get_line(char *str, char *buffer, size_t bytes_read)
 	int		i;
 
 	if (!ft_strchr(str, '\n') && bytes_read == 0 && ft_strlen(str) <= 0)
-		return (free(str), NULL);
+		return (free(str), ft_bzero(buffer, ft_strlen(buffer)), NULL);
 	else if (!ft_strchr(str, '\n') && bytes_read == 0)
 		return (str);
 	i = 0;
@@ -30,7 +30,7 @@ static char	*get_line(char *str, char *buffer, size_t bytes_read)
 	line[i + 1] = '\0';
 	if (str[i] == '\n')
 		i++;
-	ft_memcpy(buffer, &str[i], ft_strlen(&str[i] + 1));
+	ft_memcpy(buffer, &str[i], ft_strlen(&str[i]));
 	buffer[ft_strlen(&str[i])] = '\0';
 	free(str);
 	return (line);
@@ -53,7 +53,7 @@ char	*get_next_line(int fd)
 		{
 			bytes_read = read(fd, buffer, BUFFER_SIZE);
 			if ((int)bytes_read == -1)
-				return (free(line), NULL);
+				return (free(line), ft_bzero(buffer, ft_strlen(buffer)), NULL);
 			buffer[bytes_read] = '\0';
 			line = ft_strjoin(line, buffer);
 			if (ft_strchr(line, '\n'))

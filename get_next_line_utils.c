@@ -6,11 +6,21 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:54 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/01/29 15:12:24 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/02/02 12:41:25 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	ft_bzero(char *s, size_t n)
+{
+	while (n > 0)
+	{
+		*s = '\0';
+		s++;
+		n--;
+	}
+}
 
 char	*ft_strchr(const char *s, int c)
 {
