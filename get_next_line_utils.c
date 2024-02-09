@@ -6,7 +6,7 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:54 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/02/02 12:41:25 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:36:07 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ char	*ft_strjoin(char *line, char *buf)
 	ft_memcpy(new_line, line, line_len);
 	ft_memcpy(new_line + line_len, buf, buf_len);
 	new_line[line_len + buf_len] = '\0';
-	free(line);
+	if (line)
+		free(line);
 	return (new_line);
 }
