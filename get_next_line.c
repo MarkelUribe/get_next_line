@@ -6,7 +6,7 @@
 /*   By: muribe-l <muribe-l@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:09:19 by muribe-l          #+#    #+#             */
-/*   Updated: 2024/02/09 15:59:21 by muribe-l         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:04:58 by muribe-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static char	*get_line(char *str, char *buffer, size_t bytes_read)
 	while (str[i] && str[i] != '\n')
 		i++;
 	line = (char *)malloc(sizeof(char) * i + 2);
+	if (!line)
+		return (free(str), ft_bzero(buffer, ft_strlen(buffer)), NULL);
 	ft_memcpy(line, str, i);
 	line[i] = '\n';
 	line[i + 1] = '\0';
@@ -38,6 +40,10 @@ static char	*get_line(char *str, char *buffer, size_t bytes_read)
 
 static int	buffer_check(char *buffer, char **line)
 {
+	*line = (char *)malloc(sizeof(char));
+	if (!*line)
+		return (ft_bzero(buffer, ft_strlen(buffer)), 0);
+	*line[0] = '\0';
 	if (ft_strlen(buffer) > 0)
 	{
 		*line = ft_strjoin(*line, buffer);
@@ -53,10 +59,6 @@ char	*get_next_line(int fd)
 	char		*line;
 	size_t		bytes_read;
 
-	line = (char *)malloc(sizeof(char));
-	if (!line)
-		return (ft_bzero(buffer, ft_strlen(buffer)), NULL);
-	line[0] = '\0';
 	buffer_check(buffer, &line);
 	bytes_read = 1;
 	while (fd >= 0 || BUFFER_SIZE > 0)
